@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>pages-navigator demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../pages-navigator.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <demo-snippet>
+        <template>
+
+          <dom-bind>
+            <template>
+
+              <pages-navigator
+                id="nav"
+                items='[{"id":"1","name":"Posts"},{"id":"2","name":"Page 1"},{"id":"3","name":"Page 2"},{"id":"4","parentId":"1","name":"Post 1"},{"id":"5","parentId":"1","name":"Post 2"},{"id":"6","parentId":"1","name":"Post 3"},{"id":"7","parentId":"4","name":"Sub Post 1"}]'
+                selected="1"
+                selected-item="{{selectedItem}}"
+              ></pages-navigator>
+
+              <p>Active Page = [[selectedItem.name]]</p>
+              
+              <button id="btn">Open Post 1</button>
+              <button id="btn2">Open Sub Post 1</button>
+
+              <script>
+                btn.addEventListener('click', () => {
+                  nav.selected = '4';
+                })
+                btn2.addEventListener('click', () => {
+                  nav.selected = '7';
+                })
+              </script>
+
+            </template>
+          </dom-bind>
+
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+</html>

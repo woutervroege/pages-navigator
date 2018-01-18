@@ -1,0 +1,115 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="../polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
+
+<dom-module id="pages-navigator">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      nav {
+        @apply --pages-nav-container;        
+      }
+
+      #back-button {
+        @apply --pages-nav-back-button;
+      }
+
+      .nav-button {
+        @apply --pages-nav-menu-button;
+      }
+
+      .nav-button.iron-selected {
+        @apply --pages-nav-menu-button--selected;
+      }
+
+      [hidden] {
+        display: none!important;
+      }
+    </style>
+
+    <nav>
+        <button on-tap="back" hidden$="[[!parentItem.id]]">Back to [[parentItem.name]]</button>
+        <iron-selector selected="{{selected}}" attr-for-selected="value">        
+        <dom-repeat items="[[items]]" as="item">
+          <template>
+            <button class="nav-button" value$="[[item.id]]" hidden$="[[!_inCurrentTree(item.parentId, selectedItem.parentId)]]">[[item.name]]</button>
+          </template>
+        </dom-repeat>
+        </iron-selector>
+      </div>
+    </nav>
+
+  </template>
+
+  <script>
+    /**
+     * `pages-navigator`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class PagesNavigator extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'pages-navigator'; }
+
+      static get properties() {
+        return {
+          
+          items: {
+            type: Array,
+          },
+
+          selected: {
+            type: String,
+            notify: true,
+          },
+          
+          selectedItem: {
+            type: Object,
+            notify: true,
+            computed: '_computeSelectedItem(selected, items.splices)'
+          },
+
+          parentItem: {
+            type: Object,
+            notify: true,
+            computed: '_computeParentItem(selectedItem.parentId)'
+          }
+
+        }
+      }
+
+      back() {
+        this.selected = this.parentItem.id
+      }
+
+      _computeSelectedItem(selected) {
+        return this.items.find((item) => {
+          return item.id == selected;
+        }) || {};
+      }
+     
+      _computeParentItem(parentId) {
+        return this.items.find((item) => {
+          return item.id == parentId;
+        }) || {};
+      }
+
+      _filterBaseTree(item) {
+        return item.parentId == this.selectedItem.parentId;
+      }
+
+      _inCurrentTree(itemParentId, selectedItemParentId) {
+        return itemParentId == selectedItemParentId
+      }
+
+    }
+
+    window.customElements.define(PagesNavigator.is, PagesNavigator);
+  </script>
+</dom-module>
