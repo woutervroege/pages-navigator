@@ -1,18 +1,18 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
-<dom-module id="pages-navigator">
+<dom-module id="data-selector">
 
   <script>
     /**
-     * `pages-navigator`
+     * `data-selector`
      * 
      *
      * @customElement
      * @polymer
      * @demo demo/index.html
      */
-    class PagesNavigator extends Polymer.GestureEventListeners(Polymer.Element) {
-      static get is() { return 'pages-navigator'; }
+    class DataSelector extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'data-selector'; }
 
       static get properties() {
         return {
@@ -83,6 +83,6 @@
 
     }
 
-    window.customElements.define(PagesNavigator.is, PagesNavigator);
+    window.customElements.define(DataSelector.is, DataSelector);
   </script>
 </dom-module>

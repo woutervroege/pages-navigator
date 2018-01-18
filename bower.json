@@ -1,6 +1,6 @@
 {
-  "name": "pages-navigator",
-  "main": "pages-navigator.html",
+  "name": "data-selector",
+  "main": "data-selector.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
     "iron-selector": "PolymerElements/iron-selector#^2.0.1"
