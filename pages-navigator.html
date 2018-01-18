@@ -1,49 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
-<link rel="import" href="../polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../iron-selector/iron-selector.html">
 
 <dom-module id="pages-navigator">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-
-      nav {
-        @apply --pages-nav-container;        
-      }
-
-      #back-button {
-        @apply --pages-nav-back-button;
-      }
-
-      .nav-button {
-        @apply --pages-nav-menu-button;
-      }
-
-      .nav-button.iron-selected {
-        @apply --pages-nav-menu-button--selected;
-      }
-
-      [hidden] {
-        display: none!important;
-      }
-    </style>
-
-    <nav>
-        <button on-tap="back" hidden$="[[!parentItem.id]]">Back to [[parentItem.name]]</button>
-        <iron-selector selected="{{selected}}" attr-for-selected="value">        
-        <dom-repeat items="[[items]]" as="item">
-          <template>
-            <button class="nav-button" value$="[[item.id]]" hidden$="[[!_inCurrentTree(item.parentId, selectedItem.parentId)]]">[[item.name]]</button>
-          </template>
-        </dom-repeat>
-        </iron-selector>
-      </div>
-    </nav>
-
-  </template>
 
   <script>
     /**
@@ -71,14 +28,26 @@
           
           selectedItem: {
             type: Object,
+            computed: '_computeSelectedItem(selected, items.splices)',
             notify: true,
-            computed: '_computeSelectedItem(selected, items.splices)'
           },
 
           parentItem: {
             type: Object,
+            computed: '_computeParentItem(selectedItem.parentId)',
             notify: true,
-            computed: '_computeParentItem(selectedItem.parentId)'
+          },
+
+          siblings: {
+            type: Array,
+            computed: '_computeSiblings(selectedItem.parentId, items.splices)',
+            notify: true
+          },
+
+          children: {
+            type: Array,
+            computed: '_computeChildren(selectedItem.id, items.splices)',
+            notify: true
           }
 
         }
@@ -100,12 +69,16 @@
         }) || {};
       }
 
-      _filterBaseTree(item) {
-        return item.parentId == this.selectedItem.parentId;
+      _computeSiblings(selectedItemParentId) {
+        return this.items.filter((item) => {
+          return item.parentId == selectedItemParentId;
+        });
       }
-
-      _inCurrentTree(itemParentId, selectedItemParentId) {
-        return itemParentId == selectedItemParentId
+      
+      _computeChildren(selectedItemId) {
+        return this.items.filter((item) => {
+          return item.parentId == selectedItemId;
+        });
       }
 
     }

@@ -22,28 +22,50 @@
       <demo-snippet>
         <template>
 
-          <dom-bind>
+          <dom-bind id="demo">
             <template>
 
               <pages-navigator
                 id="nav"
-                items='[{"id":"1","name":"Posts"},{"id":"2","name":"Page 1"},{"id":"3","name":"Page 2"},{"id":"4","parentId":"1","name":"Post 1"},{"id":"5","parentId":"1","name":"Post 2"},{"id":"6","parentId":"1","name":"Post 3"},{"id":"7","parentId":"4","name":"Sub Post 1"}]'
+                items='[{"id":"1","name":"Posts"},{"id":"2","name":"Page 1"},{"id":"3","name":"Page 2"},{"id":"4","parentId":"1","name":"Post 1"},{"id":"5","parentId":"1","name":"Post 2"},{"id":"6","parentId":"1","name":"Post 3"},{"id":"7","parentId":"4","name":"Sub Post 1"},{"id":"8","parentId":"4","name":"Sub Post 2"}]'
                 selected="1"
                 selected-item="{{selectedItem}}"
+                parent-item="{{parentItem}}"
+                siblings="{{siblings}}"
+                children="{{children}}"
               ></pages-navigator>
+
+              <p>
+              <h3>siblings</h3>
+              <dom-repeat items="[[siblings]]" as="sibling">
+                <template>
+                  <button value="[[sibling.id]]" on-tap="openPage">[[sibling.name]]</button>
+                </template>
+              </dom-repeat>
+              </p>
+
+              <dom-if if="[[selectedItem.parentId]]">
+                <template>
+                  <button value="[[selectedItem.parentId]]" on-tap="openPage">back to [[parentItem.name]]</button>
+                </template>
+              </dom-if>
+
+              <p>
+              <h3>children</h3>
+              <dom-repeat items="[[children]]" as="child">
+                <template>
+                  <button value="[[child.id]]" on-tap="openPage">[[child.name]]</button>
+                </template>
+              </dom-repeat>
+              </p>
 
               <p>Active Page = [[selectedItem.name]]</p>
               
-              <button id="btn">Open Post 1</button>
-              <button id="btn2">Open Sub Post 1</button>
-
               <script>
-                btn.addEventListener('click', () => {
-                  nav.selected = '4';
-                })
-                btn2.addEventListener('click', () => {
-                  nav.selected = '7';
-                })
+                demo.openPage = function(evt) {
+                  var pageId = evt.target.value;
+                  nav.selected = pageId;
+                }
               </script>
 
             </template>
