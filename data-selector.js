@@ -1,4 +1,4 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+import { UpdatingElement } from 'lit-element';
 
 /**
  * `data-selector`
@@ -8,8 +8,7 @@ import {PolymerElement} from '@polymer/polymer/polymer-element.js';
  * @polymer
  * @demo demo/index.html
  */
-class DataSelector extends PolymerElement {
-  static get is() { return 'data-selector'; }
+class DataSelector extends UpdatingElement {
 
   static get properties() {
     return {
@@ -20,38 +19,50 @@ class DataSelector extends PolymerElement {
 
       selected: {
         type: String,
-        notify: true,
       },
       
       selectedItem: {
         type: Object,
-        computed: '_computeSelectedItem(selected, items.splices)',
-        notify: true,
+        attribute: 'selected-item'
       },
 
       parentItem: {
         type: Object,
-        computed: '_computeParentItem(selectedItem.parentId)',
-        notify: true,
+        attribute: 'parent-item'
       },
 
       siblings: {
         type: Array,
-        computed: '_computeSiblings(selectedItem.parentId, items.splices)',
-        notify: true
       },
 
       children: {
         type: Array,
-        computed: '_computeChildren(selectedItem.id, items.splices)',
-        notify: true
       }
 
-    }
+    };
+  }
+
+  constructor() {
+    super();
+  }
+
+  update() {
+    this.selectedItem = {...this._computeSelectedItem(this.selected)};
+    this.parentItem = {...this._computeParentItem(this.selectedItem.parentId)};
+    this.siblings = [...this._computeSiblings(this.selectedItem.parentId)];
+    this.children = [...this._computeChildren(this.selectedItem.id)];
+  }
+
+  updated(props) {
+    if(props.has('selected')) this.dispatchEvent(new CustomEvent('selected-changed', {detail: {value: this.selected}}));
+    if(props.has('selectedItem')) this.dispatchEvent(new CustomEvent('selected-item-changed', {detail: {value: this.selectedItem}}));
+    if(props.has('parentItem')) this.dispatchEvent(new CustomEvent('parent-item-changed', {detail: {value: this.parentItem}}));
+    if(props.has('siblings')) this.dispatchEvent(new CustomEvent('siblings-changed', {detail: {value: this.siblings}}));
+    if(props.has('children')) this.dispatchEvent(new CustomEvent('children-changed', {detail: {value: this.children}}));
   }
 
   back() {
-    this.selected = this.parentItem.id
+    this.selected = this.parentItem.id;
   }
 
   _computeSelectedItem(selected) {
@@ -80,4 +91,4 @@ class DataSelector extends PolymerElement {
 
 }
 
-window.customElements.define(DataSelector.is, DataSelector);
+window.customElements.define('data-selector', DataSelector);
