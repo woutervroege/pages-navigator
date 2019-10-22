@@ -29,5 +29,5 @@
       "pre-commit": "npm run format"
     }
   },
-  "version": "4.0.1"
+  "version": "5.0.0"
 }
